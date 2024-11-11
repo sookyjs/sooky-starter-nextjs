@@ -13,7 +13,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation"
 
 type FormData = z.infer<typeof singInSchema>
 
@@ -31,20 +31,22 @@ export function UserAuthForm() {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    async function onSubmit(credentials : FormData) {
+    const onSubmit = async (credentials: FormData) => {
         setIsLoading(true)
         try {
-            const response = await fetch('/api/auth/sign-up', {
-                method: 'POST',
+            const response = await fetch("/api/auth/sign-up", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify(credentials)
+                body: JSON.stringify(credentials),
             })
+            setIsLoading(false)
+            const data = await response.json()
             if (response.ok) {
-                router.push('/dashboard')
+                localStorage.setItem("token", data.token)
+                router.push("/dashboard")
             } else {
-                const data = await response.json()
                 console.error(data)
             }
         } catch (error) {

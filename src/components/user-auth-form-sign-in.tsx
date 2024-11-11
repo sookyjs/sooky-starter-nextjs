@@ -13,7 +13,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
 
 type FormData = z.infer<typeof singInSchema>
 
@@ -41,10 +41,12 @@ export function UserAuthForm() {
                 },
                 body: JSON.stringify(credentials)
             })
+            setIsLoading(false)
+            const data = await response.json()
             if (response.ok) {
-                router.push('/dashboard')
+                localStorage.setItem("token", data.token)
+                router.push("/dashboard")
             } else {
-                const data = await response.json()
                 console.error(data)
             }
         } catch (error) {
