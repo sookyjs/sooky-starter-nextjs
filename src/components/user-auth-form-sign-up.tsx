@@ -32,22 +32,24 @@ export function UserAuthForm() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const onSubmit = async (credentials: FormData) => {
+        
         setIsLoading(true)
+        
         try {
-            const response = await fetch("/api/auth/sign-up", {
+            const res = await fetch("/api/auth/sign-up", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(credentials),
             })
+            
             setIsLoading(false)
-            const data = await response.json()
-            if (response.ok) {
-                localStorage.setItem("token", data.token)
-                router.push("/dashboard")
+
+            if (res.ok) {
+                router.push("/auth/sign-in")
             } else {
-                console.error(data)
+                console.error(res)
             }
         } catch (error) {
             console.error(error)
