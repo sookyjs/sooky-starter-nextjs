@@ -1,20 +1,17 @@
 "use client"
 
+import { useSession, signOut } from "next-auth/react";
+
 const Dashboard = () => {
     
-    const token = localStorage.getItem('token')
+    const { data: session } = useSession()
 
-    if (!token) {
-        return (
-            <div>
-                <p>Not authorized</p>
-            </div>
-        );
+    if (!session) {
+        return <p>Access Denied</p>
     }
 
-    const logout = async () => {    
-        localStorage.removeItem('token')
-        window.location.reload()
+    const logout = async () => {
+        await signOut()
     }
 
     return (

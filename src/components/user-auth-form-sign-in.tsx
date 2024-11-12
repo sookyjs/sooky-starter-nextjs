@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 import { useRouter } from 'next/navigation'
+import { signIn } from "next-auth/react";
 
 type FormData = z.infer<typeof singInSchema>
 
@@ -33,24 +34,16 @@ export function UserAuthForm() {
 
     async function onSubmit(credentials : FormData) {
         setIsLoading(true)
-        try {
-            const response = await fetch('/api/auth/sign-in', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(credentials)
-            })
-            setIsLoading(false)
-            const data = await response.json()
-            if (response.ok) {
-                localStorage.setItem("token", data.token)
-                router.push("/dashboard")
-            } else {
-                console.error(data)
-            }
-        } catch (error) {
-            console.error(error)
+        const res = await signIn('credentials', {
+            email: credentials.email,
+            password: credentials.password,
+            redirect: false
+        })
+        setIsLoading(false)
+        if (res?.error) {
+            console.error(res.error)
+        } else {
+            router.push("/dashboard")
         }
     }
 
