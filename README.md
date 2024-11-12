@@ -6,6 +6,8 @@ Create a file called `.env.local`
 
 ```
 BACKEND_URL=http://localhost:9000
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=nextauth_secret
 ```
 
 Run `npm run dev`
